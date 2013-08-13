@@ -225,20 +225,20 @@ class zuul (
     require    => File['/etc/init.d/zuul'],
   }
 
-  apache::vhost { $vhost_name:
-    port     => 443,
-    docroot  => 'MEANINGLESS ARGUMENT',
-    priority => '50',
-    template => 'zuul/zuul.vhost.erb',
+  file { 'zuul.conf':
+    path    => "${apache::vhost_dir}/zuul.conf",
+    content => template('zuul/zuul.vhost.erb'),
+    notify  => Service['httpd'],
   }
-  a2mod { 'rewrite':
-    ensure => present,
-  }
-  a2mod { 'proxy':
-    ensure => present,
-  }
-  a2mod { 'proxy_http':
-    ensure => present,
-  }
+
+  file { 'zuul.conf.sym':
+    ensure  => link,
+    path    => "${apache::vhost_enable_dir}/zuul.conf",
+    target  => "${apache::vhost_dir}/zuul.conf",
+  } 
+
+  include apache::mod::rewrite
+  include apache::mod::proxy
+  include apache::mod::proxy_http
 
 }
