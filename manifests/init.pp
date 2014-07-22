@@ -115,6 +115,7 @@ class zuul (
     command     => 'pip install /opt/zuul',
     path        => '/usr/local/bin:/usr/bin:/bin/',
     refreshonly => true,
+    logoutput   => on_failure,
     subscribe   => Vcsrepo['/opt/zuul'],
     require     => Class['pip'],
   }
