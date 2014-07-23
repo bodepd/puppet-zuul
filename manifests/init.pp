@@ -53,10 +53,13 @@ class zuul (
     'python-webob',
     'python-lockfile',
     'python-paste',
+    'libxslt1-dev',
+    'libxml2-dev',
   ]
 
   package { $packages:
     ensure => present,
+    before => Exec['install_zuul'],
   }
 
   package { 'yappi':
